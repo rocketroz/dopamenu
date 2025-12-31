@@ -1,0 +1,41 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="108" fill="#1A1A2E"/>
+
+  <!-- Gradient orb glow -->
+  <circle cx="256" cy="256" r="180" fill="url(#glow)" opacity="0.3"/>
+
+  <!-- Main icon - stylized menu/plate with sparkle -->
+  <g transform="translate(128, 128)">
+    <!-- Plate base -->
+    <ellipse cx="128" cy="200" rx="100" ry="30" fill="#252542"/>
+
+    <!-- Main circle (plate) -->
+    <circle cx="128" cy="140" r="90" fill="#252542" stroke="#E85A4F" stroke-width="4"/>
+
+    <!-- Inner circle -->
+    <circle cx="128" cy="140" r="65" fill="#1A1A2E" stroke="#F4C95D" stroke-width="2"/>
+
+    <!-- Food items as colorful dots -->
+    <circle cx="100" cy="125" r="18" fill="#E85A4F"/>
+    <circle cx="145" cy="110" r="14" fill="#1B998B"/>
+    <circle cx="155" cy="150" r="16" fill="#F4C95D"/>
+    <circle cx="110" cy="160" r="12" fill="#EAEAEA"/>
+
+    <!-- Sparkle -->
+    <g transform="translate(180, 60)">
+      <path d="M20 0 L24 16 L40 20 L24 24 L20 40 L16 24 L0 20 L16 16 Z" fill="#F4C95D"/>
+    </g>
+    <g transform="translate(40, 40) scale(0.6)">
+      <path d="M20 0 L24 16 L40 20 L24 24 L20 40 L16 24 L0 20 L16 16 Z" fill="#E85A4F"/>
+    </g>
+  </g>
+
+  <defs>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#E85A4F" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#F4C95D" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#1B998B" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>
