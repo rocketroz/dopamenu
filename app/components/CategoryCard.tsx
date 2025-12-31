@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, ChevronDown, Shuffle } from 'lucide-react';
 import { Category } from '@/lib/types';
 import { useDopamenuStore } from '@/lib/store';
+import { triggerHaptic } from '@/lib/haptics';
+import { playSound } from '@/lib/sounds';
 import { cn } from '@/lib/utils';
 import { MenuItem } from './MenuItem';
 import { AddItemModal } from './AddItemModal';
@@ -60,6 +62,8 @@ export function CategoryCard({ category, index }: CategoryCardProps) {
     if (filteredItems.length === 0) return;
 
     setIsShuffling(true);
+    triggerHaptic('light');
+    playSound('shuffle');
 
     // Shuffle animation timing
     await new Promise(resolve => setTimeout(resolve, 600));
@@ -67,6 +71,8 @@ export function CategoryCard({ category, index }: CategoryCardProps) {
     const randomItem = getRandomItem(category.id);
     if (randomItem) {
       setLastPickedItem(randomItem);
+      triggerHaptic('success');
+      playSound('reveal');
     }
 
     setIsShuffling(false);

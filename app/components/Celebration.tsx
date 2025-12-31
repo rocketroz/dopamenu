@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDopamenuStore } from '@/lib/store';
 import { CELEBRATION_MESSAGES } from '@/lib/constants';
+import { playSound } from '@/lib/sounds';
 import { cn } from '@/lib/utils';
+import { Sparky } from './Sparky';
 
 const confettiColors = ['#E85A4F', '#1B998B', '#F4C95D', '#EAEAEA'];
 
@@ -59,6 +61,13 @@ export function Celebration() {
 
   useEffect(() => {
     if (showCelebration) {
+      // Play celebration sound
+      if (totalCompletions % 10 === 0 && totalCompletions > 0) {
+        playSound('celebrate');
+      } else {
+        playSound('success');
+      }
+
       const randomMessage = CELEBRATION_MESSAGES[
         Math.floor(Math.random() * CELEBRATION_MESSAGES.length)
       ];
@@ -71,7 +80,7 @@ export function Celebration() {
 
       return () => clearTimeout(timer);
     }
-  }, [showCelebration, dismissCelebration]);
+  }, [showCelebration, dismissCelebration, totalCompletions]);
 
   return (
     <AnimatePresence>
@@ -91,13 +100,14 @@ export function Celebration() {
               'max-w-sm mx-auto p-6 rounded-2xl text-center',
               'bg-night-light border border-gold/30 shadow-glow-gold'
             )}>
+              {/* Sparky celebrating */}
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: 'spring', stiffness: 500, damping: 15, delay: 0.1 }}
-                className="text-4xl mb-3"
+                className="flex justify-center mb-3"
               >
-                {totalCompletions % 10 === 0 && totalCompletions > 0 ? '🎉' : '✨'}
+                <Sparky mood="celebrating" size="md" />
               </motion.div>
 
               <motion.p

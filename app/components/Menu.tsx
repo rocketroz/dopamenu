@@ -1,16 +1,20 @@
 'use client';
 
-import { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useDopamenuStore } from '@/lib/store';
 import { CategoryCard } from './CategoryCard';
 import { EnergySelector } from './EnergySelector';
 import { QuickPick } from './QuickPick';
 import { StreakBadge } from './StreakBadge';
+import { SoundToggle } from './SoundToggle';
+import { InsightsView } from './InsightsView';
+import { Sparky, SparkyGreeting } from './Sparky';
 import { getGreeting } from '@/lib/constants';
 
 export function Menu() {
   const { categories, updateStreak } = useDopamenuStore();
+  const [showInsights, setShowInsights] = useState(false);
 
   // Update streak on mount
   useEffect(() => {
@@ -27,31 +31,45 @@ export function Menu() {
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center justify-between"
           >
-            <div>
-              <motion.h1
-                className="text-2xl font-bold text-gradient"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 }}
+            <div className="flex items-center gap-3">
+              {/* Small Sparky in header */}
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', delay: 0.2 }}
               >
-                Dopamenu
-              </motion.h1>
-              <motion.p
-                className="text-cream/50 text-sm"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-              >
-                {getGreeting()}
-              </motion.p>
+                <Sparky size="sm" />
+              </motion.div>
+              <div>
+                <motion.h1
+                  className="text-2xl font-bold text-gradient"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  Dopamenu
+                </motion.h1>
+                <motion.p
+                  className="text-cream/50 text-sm"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  {getGreeting()}
+                </motion.p>
+              </div>
             </div>
 
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
+              className="flex items-center gap-2"
             >
-              <StreakBadge />
+              <SoundToggle />
+              <div onClick={() => setShowInsights(true)} className="cursor-pointer">
+                <StreakBadge />
+              </div>
             </motion.div>
           </motion.div>
         </div>
@@ -59,6 +77,15 @@ export function Menu() {
 
       {/* Main content */}
       <main className="max-w-lg mx-auto px-4 py-6 space-y-6 pb-32">
+        {/* Hero greeting with Sparky */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col items-center py-4"
+        >
+          <SparkyGreeting />
+        </motion.section>
+
         {/* Energy selector */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
@@ -104,16 +131,29 @@ export function Menu() {
           </div>
         </motion.section>
 
-        {/* Footer hint */}
-        <motion.p
+        {/* Footer with Sparky tip */}
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="text-center text-cream/20 text-xs py-4"
+          className="flex flex-col items-center py-6 gap-3"
         >
-          Tap a category to explore. Swipe for more.
-        </motion.p>
+          <Sparky mood="idle" size="sm" />
+          <p className="text-center text-cream/20 text-xs">
+            Tap a category to explore your options.
+          </p>
+        </motion.div>
       </main>
+
+      {/* Insights View */}
+      <AnimatePresence>
+        {showInsights && (
+          <InsightsView
+            isOpen={showInsights}
+            onClose={() => setShowInsights(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -7,13 +7,17 @@ import { useDopamenuStore } from '@/lib/store';
 import { CATEGORY_CONFIG } from '@/lib/constants';
 import { CategoryType } from '@/lib/types';
 import { triggerHaptic } from '@/lib/haptics';
+import { playSound } from '@/lib/sounds';
 import { cn } from '@/lib/utils';
+import { ReflectionModal } from './ReflectionModal';
 
 export function QuickPick() {
   const [isShuffling, setIsShuffling] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [shuffleTexts, setShuffleTexts] = useState<string[]>([]);
   const [currentShuffleIndex, setCurrentShuffleIndex] = useState(0);
+  const [showReflection, setShowReflection] = useState(false);
+  const [completedItemName, setCompletedItemName] = useState('');
 
   const controls = useAnimation();
 
@@ -33,6 +37,7 @@ export function QuickPick() {
     setIsShuffling(true);
     setShowResult(false);
     triggerHaptic('light');
+    playSound('shuffle');
 
     // Create shuffle animation texts
     const shuffleSequence = Array.from({ length: 10 }, () => {
@@ -53,8 +58,9 @@ export function QuickPick() {
       await new Promise(resolve => setTimeout(resolve, 60 + i * 30));
     }
 
-    // Final reveal with strong haptic
+    // Final reveal with strong haptic and sound
     triggerHaptic('success');
+    playSound('reveal');
 
     // Pick final result
     const picked = getRandomItem();
@@ -76,6 +82,10 @@ export function QuickPick() {
     if (!lastPickedItem) return;
 
     triggerHaptic('success');
+    playSound('success');
+
+    // Store the name for reflection
+    setCompletedItemName(lastPickedItem.name);
 
     // Find which category this item belongs to
     const category = categories.find(c =>
@@ -88,6 +98,9 @@ export function QuickPick() {
 
     setShowResult(false);
     setLastPickedItem(null);
+
+    // Show reflection modal after a brief delay
+    setTimeout(() => setShowReflection(true), 300);
   };
 
   const handleDismiss = () => {
@@ -306,6 +319,13 @@ export function QuickPick() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Reflection modal after completion */}
+      <ReflectionModal
+        isOpen={showReflection}
+        onClose={() => setShowReflection(false)}
+        itemName={completedItemName}
+      />
     </div>
   );
 }

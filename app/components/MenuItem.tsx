@@ -6,6 +6,8 @@ import { Check, Trash2, Edit3 } from 'lucide-react';
 import { MenuItem as MenuItemType, CategoryType } from '@/lib/types';
 import { useDopamenuStore } from '@/lib/store';
 import { ENERGY_LABELS } from '@/lib/constants';
+import { triggerHaptic } from '@/lib/haptics';
+import { playSound } from '@/lib/sounds';
 import { cn } from '@/lib/utils';
 
 interface MenuItemProps {
@@ -31,10 +33,14 @@ export function MenuItem({ item, categoryId, index }: MenuItemProps) {
   const isHighlighted = lastPickedItem?.id === item.id;
 
   const handleComplete = () => {
+    triggerHaptic('success');
+    playSound('success');
     completeMenuItem(categoryId, item.id);
   };
 
   const handleDelete = () => {
+    triggerHaptic('light');
+    playSound('tap');
     deleteMenuItem(categoryId, item.id);
   };
 
