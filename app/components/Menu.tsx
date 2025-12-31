@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles } from 'lucide-react';
 import { useDopamenuStore } from '@/lib/store';
 import { CategoryCard } from './CategoryCard';
 import { EnergySelector } from './EnergySelector';
@@ -9,12 +10,15 @@ import { QuickPick } from './QuickPick';
 import { StreakBadge } from './StreakBadge';
 import { SoundToggle } from './SoundToggle';
 import { InsightsView } from './InsightsView';
+import { ParticlePlayground } from './ParticlePlayground';
 import { Sparky, SparkyGreeting } from './Sparky';
 import { getGreeting } from '@/lib/constants';
+import { cn } from '@/lib/utils';
 
 export function Menu() {
   const { categories, updateStreak } = useDopamenuStore();
   const [showInsights, setShowInsights] = useState(false);
+  const [showParticles, setShowParticles] = useState(false);
 
   // Update streak on mount
   useEffect(() => {
@@ -131,17 +135,38 @@ export function Menu() {
           </div>
         </motion.section>
 
-        {/* Footer with Sparky tip */}
+        {/* Footer with Sparky tip and Zen Mode */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="flex flex-col items-center py-6 gap-3"
+          className="flex flex-col items-center py-6 gap-4"
         >
-          <Sparky mood="idle" size="sm" />
-          <p className="text-center text-cream/20 text-xs">
-            Tap a category to explore your options.
-          </p>
+          {/* Zen Mode Button */}
+          <motion.button
+            onClick={() => setShowParticles(true)}
+            className={cn(
+              'flex items-center gap-2 px-5 py-3 rounded-2xl',
+              'bg-gradient-to-r from-night-light to-night-lighter',
+              'border border-cream/10 hover:border-gold/30',
+              'text-cream/70 hover:text-cream',
+              'transition-all duration-300',
+              'shadow-card hover:shadow-glow-gold'
+            )}
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Sparkles className="w-5 h-5 text-gold" />
+            <span className="font-medium">Zen Mode</span>
+            <span className="text-xs text-cream/40 ml-1">with hand tracking</span>
+          </motion.button>
+
+          <div className="flex items-center gap-3">
+            <Sparky mood="idle" size="sm" />
+            <p className="text-center text-cream/20 text-xs">
+              Tap a category to explore your options.
+            </p>
+          </div>
         </motion.div>
       </main>
 
@@ -151,6 +176,16 @@ export function Menu() {
           <InsightsView
             isOpen={showInsights}
             onClose={() => setShowInsights(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Particle Playground */}
+      <AnimatePresence>
+        {showParticles && (
+          <ParticlePlayground
+            isOpen={showParticles}
+            onClose={() => setShowParticles(false)}
           />
         )}
       </AnimatePresence>
